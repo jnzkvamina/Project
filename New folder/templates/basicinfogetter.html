@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic information</title>
+	<style> body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+    h1 {
+        text-align: center;
+        margin-top: 50px;
+    }
+    h2 {
+        text-align: center;
+        margin-top: 50px;
+    }
+    table {
+        border-collapse: collapse;
+        margin: 0 auto;
+        margin-top: 50px;
+    }
+    
+    table th, table td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
+    
+    table th {
+        background-color: lightgray;
+    }
+    
+    .dataframe {
+        border-collapse: collapse;
+        margin: 0 auto;
+        margin-top: 50px;
+        font-size: 14px;
+    }
+    
+    .dataframe th, .dataframe td {
+        padding: 5px;
+        text-align: center;
+        border: 1px solid black;
+    }
+    
+    .dataframe th {
+        background-color: lightgray;
+    }
+    
+    a {
+        position: relative;
+        top: 500px;
+        left: 20px;
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        padding: 10px;
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+    
+    a:hover {
+        background-color: lightgray;
+    }
+</style>
+</head>
+<a style="position:relative; top:500px; left:20px;", href="{{ url_for('index') }}">To the main page</a>	
+<body>
+	<h1>Basic information about the dataset's column names</h1>
+	<table >
+	<tr>
+		{%for items in result.columns%}
+		<th>{{items}}</th>
+		{%endfor%}
+	</tr>
+	<tr>
+	{%for val in result.iloc[0]%}
+		<td>{{val}}</td>
+	{%endfor%}
+	</tr>
+	{%for val in result.iloc[1]%}
+		<td>{{val}}</td>
+	{%endfor%}
+	</tr>
+	</table>
+
+	<h2>Example of the dataframe view</h2>
+	<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: center;">
+      <th></th>
+      <th>seqid</th>
+      <th>source</th>
+      <th>type</th>
+      <th>start</th>
+      <th>end</th>
+      <th>score</th>
+      <th>strand</th>
+      <th>phase</th>
+      <th>attribute</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>GRCh38</td>
+      <td>chromosome</td>
+      <td>1</td>
+      <td>248956422</td>
+      <td>.</td>
+      <td>.</td>
+      <td>.</td>
+      <td>ID=chromosome:1;Alias=CM000663.2,chr1,NC_000001.11</td>
+    </tr>
+    <tr>
+      <th>235068</th>
+      <td>10</td>
+      <td>GRCh38</td>
+      <td>chromosome</td>
+      <td>1</td>
+      <td>133797422</td>
+      <td>.</td>
+      <td>.</td>
+      <td>.</td>
+      <td>ID=chromosome:10;Alias=CM000672.2,chr10,NC_000010.11</td>
+    </tr>
+    <tr>
+      <th>328938</th>
+      <td>11</td>
+      <td>GRCh38</td>
+      <td>chromosome</td>
+      <td>1</td>
+      <td>135086622</td>
+      <td>.</td>
+      <td>.</td>
+      <td>.</td>
+      <td>ID=chromosome:11;Alias=CM000673.2,chr11,NC_000011.10</td>
+    </tr>
+	
+</body>
+
+</html>

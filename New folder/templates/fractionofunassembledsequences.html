@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My App</title>
+</head>
+<body>
+	<h1>The fraction of unassembled sequences from source GRCh38:</h1>
+	<h2 style="color:gray">Unassembled sequences are of type supercontig while the others are of chromosome</h2>
+	<h3>Number of supercontig type of sequences: {{result[0]}}</h3>
+	<h3>Number of chromosomal sequences: {{result[1]}}</h3>
+	<h3>The resulting fraction: {{result[2]}}</h3>
+	<a style="position:fixed; top:300px", href="{{ url_for('index') }}">Home</a>	
+
+</body>
+</html>

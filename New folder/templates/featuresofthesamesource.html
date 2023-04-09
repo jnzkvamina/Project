@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dropdown list example</title>
+</head>
+<body>
+	<h1>Nuber of features provided by the same source</h1>
+  <form method="POST" action="{{ url_for('process') }}">
+    
+    <label for="source">Choose a source name:</label>
+<select name="source" id="source">
+  {% for item in keys%}
+  <option value={{item}}>{{item}}</option>
+  {%endfor%}
+</select>
+    <input type="submit" value="Submit">
+  </form>
+  <a style="position:relative; top:20px; left:10px;", href="{{ url_for('index') }}">To the main page</a>	
+</body>
+</html>

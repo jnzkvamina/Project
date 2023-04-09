@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My App</title>
+</head>
+<a style="position:relative; top:50px; left:800px;", href="{{ url_for('index') }}">To the main page</a>	
+<body>
+	<h1>The list of unique operations available in the dataset</h1>
+<h3>Unique operations for the whole dataset</h3>
+<ol type="1">
+  {%for items in result[0]["GlobalDataFrame"]%}
+  <li>{{items}}</li>
+  {%endfor%}
+</ol>
+<h3>Unique operations for the dataset from ensembl, havana, and ensembl_havana</h3>
+<ol type="1">
+  {%for items in result[1]['EnsHavDataFrame']%}
+  <li>{{items}}</li>
+  {%endfor%}
+</ol>
+
+<h3>Unique operations for the chromosomal dataset</h3>
+<ol type="1">
+  {%for items in result[2]['chromo']%}
+  <li>{{items}}</li>
+  {%endfor%}
+</ol>
+<h2>Description</h2>
+<p>"BasicInfoGetter":"getting the some basic information about the dataset(name and data type)"</p>
+<p>"UniqueSeqList":"obtaining the list of unique sequence IDs available in the dataset"</p>
+<p>"FeaturesOfTheSameSource":"counting the number of features provided by the same source"</p>
+<p>"UniqueOperationList":"obtaining the list of unique type of operations available in the dataset"</p>
+<p>"NumOfEntries":"counting the number of entries for each type of operation in the whole set or for the dataset containing containing only entries from source ensembl , havana and ensembl_havana"</p>
+<p>"EntriesWithEntireChr":"deriving a new dataset containing only the information about entire chromosomes"</p>
+<p>"FractionOfUnassembledSequences":"calculating the fraction of unassembled sequences from source GRCh38"</p>
+<p>"EntriesFromEnsembl":"obtaining a new dataset containing only entries from source ensembl , havana and ensembl_havana"</p>
+<p>"GeneNamesGetter":"returning the gene names from the dataset containing containing only entries from source ensembl ,havana and ensembl_havana"</p>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+    <title>My App</title>
+	<body>
+	<a style="position:relative; top:10px;", href="{{ url_for('index') }}">To the main page</a><table border="1" class="dataframe">
+
+	<ul>
+	{%for el in result%}
+	<li>{{el}}</li>
+	{%endfor%}
+	</ul>
+	</body>
+</html>

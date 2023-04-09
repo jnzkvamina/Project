@@ -1,0 +1,161 @@
+<head>
+<style>
+  .scaled-image {
+    max-width: 40%;
+    height: auto;
+  }
+</style>
+</head>
+<h1>Project description</h1>
+
+<h2>The main classes we have created</h2>
+<p>Overall, the classes form a simple inheritance hierarchy, with reader as the base class and GlobalDataFrame, EnsHavDataFrame, and chromo as its subclasses. 
+The thelist class is not related to this hierarchy but rather provides some additional functionality on top of the other classes.</p>
+<p>Some of the child classes use overriding principle in the __init__ constructor method in order to specify the unique DataSet to work on later. 
+For example, GlobalDataFrame class has an attribute DataFrame that is passed to all its children due to the inheritance. 
+EnsHavDataFrame class, a child of GlobalDataFrame overridesthe __init__() to filter the dataframe based on the source type.</p>
+<p>For the operations to be easier to execute, we have created several classes, as you can see below. Some classes are not included in this description, as you can see them later(below this part) </p>
+  <img src="{{url_for('static', filename='/crc3.png')}}" class="scaled-image">
+
+ <img src="{{url_for('static', filename='/gdfclass.png')}}" class="scaled-image">
+
+ <p>↑It deals with the global dataframe↑</p> 
+ <img src="{{url_for('static', filename='/crc4.png')}}" class="scaled-image">
+<img src="{{url_for('static', filename='/enshavclass.png')}}" class="scaled-image">
+
+<p>↑It deals with the dataframe consisting of entries from havana, ensembl, and ensembl_havana↑</p> 
+<img src="{{url_for('static', filename='/crc5.png')}}" class="scaled-image">
+<img src="{{url_for('static', filename='/chromoclass.png')}}" class="scaled-image">
+<p>↑It deals with the chromosomal dataframe↑</p>
+<img src="{{url_for('static', filename='/crc6.png')}}" class="scaled-image">
+<img src="{{url_for('static', filename='/listclass.png')}}" class="scaled-image">
+<p>↑It deals with the operations requiring all 3 dataframes above↑ </p> 
+
+<h2>Data access</h2>
+<p>The software is designed to read and analyze human genome annotation files in GFF3 format. 
+The input data is the human genome annotation file, which can be downloaded from a specific location. 
+The dataset reader used in this software is Pandas, which reads the data and returns a dataset object, 
+which is a wrapper around a Pandas DataFrame.<p>
+<p>The dataset operations are executed over the dataset object, which provides multiple insights into the data. 
+The software has several types of operations, providing a web-based interface for the user<p>
+<p>The software is modularized into different Python files, aggregating different classes or functions coherently, as you will see later.<p>
+<p>To manage the activation of operations, activation decorator is defined. It manages the activation of operations, and the dataset object queries whether a certain operation can be executed or not. 
+The operations can only be executed if they are marked as active.<p>
+
+<h4>In addition, the steps that were taken in order to optimize the code will be shown. 
+The old, relatively slow code will be presented in the grey colour right after the final code of the software.</h4>
+
+<h3>***In some methods, we have restricted the number of entries to be represented in the final outcome of the method. 
+This is due to a large number of entries in the dataset and if we run the program, it is executed very slow.
+So for the convenience we have cut the output of some functions in the flask code. But we can easily change this and show you the whole output </h3>
+<p>First, when a user runs the program, the downloaded GFF3 file is passed to python code in order to be read. The reader relies on Pandas.<p>
+<img src="{{url_for('static', filename='/crc1.png')}}" class="scaled-image">
+<img src="{{url_for('static', filename='/image1.png')}}" class="scaled-image">
+<p>This is a Python class named reader
+The __init__() is called when an instance of the reader class is created. It takes a file as an input and checks its file extension. 
+If the extension is ".gff3", it calls the filter() method to read the contents of the file and store it in a Pandas DataFrame called DataFrame. 
+If the extension is not ".gff3", it prints a message saying "not GFF3 format".</p>
+<p>The filter() method takes a file as an input and reads it using the pd.read_csv() Pandas function. 
+The file is read with tab-separated values, the header=None parameter specifies that the file has no header row, and the comment="#" 
+parameter specifies that lines starting with "#" should be ignored. The reader treat all lines starting with # as comments, and simply 
+ignore them during the analysis. The names parameter specifies the column names of the DataFrame.<p>
+<p>The resulting DataFrame is returned by the filter() method and stored in the DataFrame attribute of the reader class.<p>
+<p>When a dataset reader reads the data it returns a dataset object as output that is a wrapper around a Pandas DataFrame<p>
+<img src="{{url_for('static', filename='/image2.png')}}" class="scaled-image">
+
+<p>The code in gray is unoptimized code. In terms of efficiency and performance, the second code is likely to be less efficient than the first code.
+The first code uses the pd.read_csv() method to read the data directly into a pandas data frame, which is optimized for efficient handling of large data sets. </p>
+<p>The second code reads the data using the csv.reader() method and appends each row to a list before converting the list to a pandas data frame. 
+This involves more steps, which can be slower and less efficient for larger data sets, as we have one.</p>
+<p>Additionally, the first code uses the os.path.splitext() method to check the file extension, while the second code uses a string search. 
+The os.path.splitext() method is likely to be more efficient and reliable for checking file extensions.</p>
+<p>The code reads data from a file using the pandas library, which is efficient and optimized for handling large datasets. 
+However, there may be performance issues if the file is too large, as the entire file is loaded into memory. </p>
+
+<h2>A decorator for managing the activation of operations</h2>
+<p>Regardless of the specific type of operation, a dataset object can access and execute them. 
+However, these operations can only be executed through a dataset object and only if they are marked as active. 
+When an operation is marked as active, it is loaded into a registry of active operations that the dataset 
+object can check to determine whether a certain operation can be executed.</p>
+<img src="{{url_for('static', filename='/crc2.png')}}" class="scaled-image">
+<img src="{{url_for('static', filename='/image3.png')}}" class="scaled-image">
+<p>In summary, this code defines a decorator that can be used to wrap any function, and the wrapped function will 
+keep track of the active operations. The active_operations list is a global variable that is used to store the names of the active operations. 
+Whenever a new operation is called, the decorator checks if it is already in the list of active operations. If not, it adds it to the list. 
+The wrapper function then calls the original operation function with the provided arguments and returns the result. 
+Finally, the wrapper function is returned with the active_operations attribute attached to it.</p>
+<h2>Dataset Operations<h2>
+<p>Using a dataset object, it is possible to obtain various insights about the data through operations. 
+Each operation is performed on a dataset object, and the outcome of an operation is a new dataset object.</p>
+<h3>Getting some basic information about the dataset. The basic information are the name and data type of each column</h3>
+<p>It could be useful in cases where a quick understanding of the data is needed without having to manually inspect each column.</p>
+<img src="{{url_for('static', filename='/image4.png')}}" class="scaled-image">
+<p>The code defines a method called BasicInfoGetter. Inside the method, a dictionary d is initialized, and col_info_list is created as a list of two lists. The first list contains descriptions of various column information, while the second list contains the data types of the corresponding columns in a pandas DataFrame.</p>
+<p>Next, a dictionary comprehension is used to populate d with key-value pairs where the key is the column name and the value is a tuple of the description and data type for the column. Finally, the dictionary d is converted into a pandas DataFrame, where the rows are labeled as description and data type.</p>
+<h3>Obtaining the list of unique sequence IDs available in the dataset</h3>
+<img src="{{url_for('static', filename='/image5.png')}}" class="scaled-image">
+<p>The code defines a method called UniqueSeqList which takes in a self parameter. Inside the method, the code locates rows in the DataFrame where the "attribute" column contains the string "ID" using the loc method. The str.extract() method is used to extract the values after the "ID=" substring in the "attribute" column. These extracted values are stored in the variable id_values. The set() function is then used to convert the id_values to a set, which eliminates any duplicates.</p>
+<p>Next, the set of unique IDs is converted back to a list and stored in the variable unique_id_list. Finally, a pandas DataFrame is created using the unique IDs list as the data, with a column named "ID". This DataFrame is returned by the method.</p>
+<img src="{{url_for('static', filename='/image6.png')}}" class="scaled-image">
+<p>The first code is more concise and requires fewer lines of code than the second code, so the code is easier to read and maintain. The first code uses built-in functions loc, extract, set, and list to obtain the list of unique sequence IDs. These functions are faster than the for loop used in the second code. The first code processes the data in a vectorized way, while the second code uses a for loop to iterate through the data. And last, the first code creates a pandas DataFrame to store the list of unique sequence IDs, while the second code creates just a list. Pandas DataFrames are more memory-efficient than Python lists. In summary, the first code is more efficient and performant due to its use of built-in functions, vectorized operations of Pandas extention, and memory-efficient data structures.</p>
+<h3>Obtaining the list of unique type of operations available in the dataset</h3>
+<img src="{{url_for('static', filename='/image7.png')}}" class="scaled-image">
+<p>The code generates 3 data frames containing unique operation lists for three objects: GlobalDataFrame, EnsHavDataFrame, and chromo. </p>
+<p>Three empty lists l, l1, and l2 are initialized. A for loop is used to iterate over the list of attributes of GlobalDataFrame object returned by dir(GlobalDataFrame). If the attribute does not contain an underscore (_) and is not equal to UniqueOperationList, then it is appended to the list l. A similar for loop is used to iterate over the list of attributes of EnsHavDataFrame object returned by dir(EnsHavDataFrame). If the attribute does not contain an underscore and is not equal to UniqueOperationList, BasicInfoGetter, and FeaturesOfTheSameSource, then it is appended to the list l1. Another for loop is used to iterate over the list of attributes of chromo object returned by dir(chromo). If the attribute does not contain an underscore, then it is appended to the list l2. Three Pandas data frames df1, df2, and df3 are created using the lists l, l1, and l2, respectively. Finally, the data frames df1, df2, and df3 are returned as output. </p>
+<h3> Counting the number of features provided by the same source</h3>
+<p>Overall, the code counts the number of features for each unique source in the input data frame. However, it assumes that the input data frame has a column named "source", so this code will only work on data frames with this specific column name. </p>
+<img src="{{url_for('static', filename='/image8.png')}}" class="scaled-image">
+<p>A dictionary d is initialized to store the count of features for each unique source in the data frame. A list source_list is created by extracting the "source" column from the input data frame. A for loop is used to iterate over each unique source in source_list. For each source, the count of features with that source is added to the corresponding value in the dictionary d. A Pandas data frame df is created using the dictionary d, with the index set to 'number of features'. The data frame df is returned as output. </p>
+<img src="{{url_for('static', filename='/image9.png')}}" class="scaled-image">
+<p>Both codes produce the same result as they count the number of features for each unique source in the input data frame. However, the final implementation returns a Pandas data frame instead of a dictionary, which may be more convenient for further analysis and processing. </p>
+<h3> Counting the number of entries for each type of operation</h3>
+<img src="{{url_for('static', filename='/image10.png')}}" class="scaled-image">
+<p>This code generates a data frame containing the number of entries for various functions across three different data sources. The first line is for the main 
+DataFrame with all entries, the second row is for the entries from ensembl,ensembl_havana and havana, as the task required. And in addition, the operation counts 
+the number of entries for chromosomal dataset.  </p>
+<p>Three empty dictionaries counts_d1, counts_d2, and counts_d3 are initialized to store the number of entries for each function in the three different data sources. Three for loops are used to iterate over each function name in the GlobalDataFrame, EnsHavDataFrame, and chromo data frames, respectively. For each function name, a check is performed to ensure that it is not one of the three functions to be excluded, and the length of the result obtained by calling that function on the corresponding data frame is stored in the appropriate dictionary. A new Pandas data frame df is created with the counts from each of the three dictionaries as rows and the three data sources as columns.Two additional columns are added to the data frame for BasicInfoGetter and FeaturesOfTheSameSource, with the counts of 9 and the length of the respective data frames, respectively. The data frame is written to an HTML file using the to_html() method and some custom HTML code is added to include a link to the main page.The final output is the df data frame. </p>
+<p>Additionally, there may be some potential issues with hard-coded file paths and assumptions checking about the structure of the input data that could limit the reusability of this code. Also, due to the fact that the function calls all the functions available, its performance is slow. </p>
+
+
+<h3> Deriving a new dataset containing only the information about entire chromosomes. Entries with entire chromosomes comes from source GRCh38</h3>
+<p>Overall, this code converts the data in the "New_Data" attribute into an HTML table format and writes it to a file called "entrieswithentirechr.html" in the specified directory. It then returns the original "New_Data" attribute. </p>
+<img src="{{url_for('static', filename='/image11.png')}}" class="scaled-image">
+<h3> Calculating the fraction of unassembled sequences from source GRCh38. Hint: unassembled sequences are of type supercontig while the others are of chromosome; </h3>
+<img src="{{url_for('static', filename='/image12.png')}}" class="scaled-image">
+
+<p>This code creates a new DataFrame called "New_DF" that only contains rows where the "type" column equals the string value "supercontig". This is done by using Boolean indexing, which creates a filter based on the specified condition and then selects the rows where the filter is true. At the end the function returns 3 results as a tuple, the size of new data frame, the size of old one and their fraction, respectively</p>
+<h3> Obtaining a new dataset containing only entries from source ensembl , havana and ensembl_havana  </h3>
+<img src="{{url_for('static', filename='/image13.png')}}" class="scaled-image">
+<p>This method uses the filtered values from __init__() constructor that takes into account the data from the given sources, and eventually returns them </p>
+
+<h3> Returning the gene names from the dataset containing containing only entries from source ensembl , havana and ensembl_havana . </h3>
+<img src="{{url_for('static', filename='/image14.png')}}" class="scaled-image">
+<p>Here, we have decided to iterate through "attribute" column in the DataFrame.Then we split the values containing ";" and search for the value "Name=" to be in it.
+This is done to filter all the entries without gene names and to get only the name without any extra characters that we do not need. In the end of iterations we create 
+a new dataframe consistiong only of the gene names. Also, to exclude any duplicates of the name we use set data type. </p>
+
+<img src="{{url_for('static', filename='/image15.png')}}" class="scaled-image">
+<p>The old code looks somewhat similar, but we used dict.fromkeys() method (to avoid duplicates) that made our program slow.
+Also we have created several lists, some of them were with boolean values in order to filter the given data. But this operations were also affecting the speed of the execution</p>
+
+<h2>UML diagram for the python code:</h2>
+<img src="{{url_for('static', filename='/uml.jfif')}}">
+<p>We start with reader class, because it is the first thing that the program does during selecting an operation to be active. 
+The reader class has filename and extension attributes that are strings used to determine the type of file to be read by the software. 
+Also, it has DataFrame attribute , a result of another function that is apart from this class, its name is filter.The filter method has a string attribute “file” passed to it by its wrapper function in the reader class.  
+The reader class is in dependency relationship with filter method. 
+The reason for that is a directed relationship which is used to show that the reader class requires or uses the function of filter method to execute the code further. 
+The filter method provides the reader class with some essential functions, such as reading, filtering and creating a pandas DataFrame, so the reader class is dependent on the result of the filter method. </p>
+<p>GlobalDataFrame has a private attribute DataFrame that is a pandas data frame that stores all the values from gff3 file. 
+EnsHavDataFrame has a private attribute DataFrame that is a overriden from the GlobalDataFrame class but now it is filtered according to its sources. 
+Chromo class has a private attribute called New_Data that is also a filtered according to its source.</p>
+<p>The reader class is a parent class of GlobalDataFrame, chromo classes. GlobalDataFrame is a parent of EnsHavDataFrame, so apparently, the reader is a superclass for EnsHavDataFrame too. 
+These relationships between children classes of the reader is chosen to be a generalization, as the subclasses take on the functionality of a parent or superclas, in other words, inherit from the superclass. </p>
+<p>The relationship of active_operation with EnsHavDataFrame, chromo, GlobalDataFrame and thelist classes is also dependency. 
+The reason for that is decorator presence. Active_operation is a decorator of all the methods inside the named classes. 
+We could also represent this relationship as an association, but in our case, the dependency is going to be better explanation due to the fact that the action of a decorator function depends on a particular method chosen. </p>
+<p>In addition to all the relationships mentioned above, there is 3 separate unidirectional associations between thelist and 3 classes (EnsHavDataFrame, chromo and GlobalDataFrame). 
+The meaning of it: thelist class knows and uses some attribute values from these classes, but those 3 classes do not know about it and they do not have a direct access to thelist class. </p>
+<p>All the methods represented in this diagram are described above. 
+We did not include them in our UML description, because we wanted to explain them with their python code and their edited optimized version, 
+also, we did the description of the methods in CRC cards, as you have already seen before. </p>
